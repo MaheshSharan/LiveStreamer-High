@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: livestreamer-backend
+    env: node
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: FRONTEND_URL
+        value: https://live-streamer.vercel.app
