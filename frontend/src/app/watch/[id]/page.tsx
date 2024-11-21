@@ -15,7 +15,7 @@ export default function StreamPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const SOCKET_URL = process.env.NODE_ENV === 'production' 
-      ? 'https://your-render-service-url' 
+      ? 'http://localhost:3001'  // We'll update this after backend deployment
       : 'http://localhost:3001';
     
     socketRef.current = io(SOCKET_URL);
