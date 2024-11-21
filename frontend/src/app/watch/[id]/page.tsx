@@ -15,7 +15,7 @@ export default function StreamPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const SOCKET_URL = process.env.NODE_ENV === 'production' 
-      ? 'http://localhost:3001'  // We'll update this after backend deployment
+      ? 'https://livestreamer-backend.onrender.com'  // Replace with your actual Render.com URL
       : 'http://localhost:3001';
     
     socketRef.current = io(SOCKET_URL);
