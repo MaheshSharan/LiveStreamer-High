@@ -4,8 +4,18 @@ services:
     env: node
     buildCommand: npm install
     startCommand: node src/server.js
+    # Optimize for minimal resource usage
+    plan: free
+    autoDeploy: true
+    # Ensure clean environment each deploy
+    disk:
+      name: tmp
+      mountPath: /tmp
+      sizeGB: 0.1
     envVars:
       - key: PORT
         value: 3001
+      - key: NODE_ENV
+        value: production
       - key: FRONTEND_URL
-        value: https://live-streamer.vercel.app
+        value: https://live-streamer-high.vercel.app

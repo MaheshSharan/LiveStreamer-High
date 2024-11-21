@@ -11,7 +11,7 @@ const server = http.createServer(app);
 // Allow both development and production frontend URLs
 const allowedOrigins = [
     'http://localhost:3000',
-    'https://live-streamer.vercel.app'
+    'https://live-streamer-high.vercel.app'
 ];
 
 const io = new Server(server, {
@@ -19,16 +19,34 @@ const io = new Server(server, {
         origin: allowedOrigins,
         methods: ["GET", "POST"],
         credentials: true
-    }
+    },
+    // Optimize WebSocket for memory usage
+    transports: ['websocket'],
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    // Don't store message history
+    maxHttpBufferSize: 1e6 // 1 MB max message size
 });
+
+// Store active streams in memory only
+const activeStreams = new Map();
+
+// Cleanup inactive streams every 5 minutes
+setInterval(() => {
+    const now = Date.now();
+    activeStreams.forEach((stream, streamId) => {
+        // Remove streams inactive for more than 1 hour
+        if (now - stream.lastActivity > 3600000) {
+            console.log('Cleaning up inactive stream:', streamId);
+            activeStreams.delete(streamId);
+        }
+    });
+}, 300000);
 
 // Basic health check for Render
 app.get('/', (req, res) => {
     res.send('LiveStreamer Backend is running!');
 });
-
-// Store active streams
-const activeStreams = new Map();
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
@@ -38,7 +56,8 @@ io.on('connection', (socket) => {
         const streamId = generateStreamId();
         activeStreams.set(streamId, {
             broadcasterId: socket.id,
-            viewers: new Set()
+            viewers: new Set(),
+            lastActivity: Date.now()
         });
         socket.emit('stream-created', streamId);
         console.log('Stream created:', streamId);
@@ -49,40 +68,42 @@ io.on('connection', (socket) => {
         console.log('Viewer joining stream:', streamId);
         const stream = activeStreams.get(streamId);
         if (stream) {
+            stream.lastActivity = Date.now();
             stream.viewers.add(socket.id);
-            // Notify broadcaster of new viewer
             io.to(stream.broadcasterId).emit('viewer-joined', socket.id);
-            // Update viewer count for everyone in the stream
             io.to(stream.broadcasterId).emit('viewer-count', stream.viewers.size);
             socket.emit('viewer-count', stream.viewers.size);
             console.log('Viewer joined:', socket.id, 'Viewer count:', stream.viewers.size);
         }
     });
 
-    // Handle WebRTC signaling
+    // Handle WebRTC signaling with memory optimization
     socket.on('signal', ({ to, signal }) => {
-        console.log('Signal from', socket.id, 'to', to, 'type:', signal.type || 'candidate');
+        // Update stream activity
+        activeStreams.forEach(stream => {
+            if (stream.broadcasterId === socket.id || stream.viewers.has(socket.id)) {
+                stream.lastActivity = Date.now();
+            }
+        });
+        
+        console.log('Signal from', socket.id, 'to', to);
         io.to(to).emit('signal', {
             from: socket.id,
             signal
         });
     });
 
-    // Handle disconnection
+    // Handle disconnection with cleanup
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
-        // Clean up streams and viewers
         activeStreams.forEach((stream, streamId) => {
             if (stream.broadcasterId === socket.id) {
-                // Broadcaster disconnected
                 console.log('Broadcaster disconnected, ending stream:', streamId);
                 activeStreams.delete(streamId);
-                // Notify all viewers
                 stream.viewers.forEach(viewerId => {
                     io.to(viewerId).emit('stream-ended');
                 });
             } else if (stream.viewers.has(socket.id)) {
-                // Viewer disconnected
                 console.log('Viewer disconnected from stream:', streamId);
                 stream.viewers.delete(socket.id);
                 io.to(stream.broadcasterId).emit('viewer-count', stream.viewers.size);
