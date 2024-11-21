@@ -48,10 +48,22 @@ export default function BroadcastPage() {
 
   useEffect(() => {
     const SOCKET_URL = process.env.NODE_ENV === 'production' 
-      ? 'https://livestreamer-backend.onrender.com'  // Replace with your actual Render.com URL
+      ? 'https://livestreamer-backend.onrender.com'
       : 'http://localhost:3001';
     
-    socketRef.current = io(SOCKET_URL);
+    socketRef.current = io(SOCKET_URL, {
+      transports: ['websocket'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
+    });
+
+    socketRef.current.on('connect', () => {
+      console.log('Connected to server with socket ID:', socketRef.current?.id);
+    });
+
+    socketRef.current.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+    });
 
     socketRef.current.on('viewer-joined', async (viewerId: string) => {
       console.log('New viewer joined:', viewerId);
@@ -90,7 +102,12 @@ export default function BroadcastPage() {
     socketRef.current.on('stream-created', (id: string) => {
       console.log('Stream created with ID:', id);
       setStreamId(id);
-      setStreamUrl(`${window.location.origin}/watch/${id}`);
+      const baseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://live-streamer-high.vercel.app'
+        : window.location.origin;
+      const url = `${baseUrl}/watch/${id}`;
+      setStreamUrl(url);
+      console.log('Stream URL set to:', url);
     });
 
     return () => {
@@ -105,6 +122,18 @@ export default function BroadcastPage() {
 
   const startStream = async () => {
     try {
+      // Ensure socket is connected
+      if (!socketRef.current) {
+        const SOCKET_URL = process.env.NODE_ENV === 'production' 
+          ? 'https://livestreamer-backend.onrender.com'
+          : 'http://localhost:3001';
+        socketRef.current = io(SOCKET_URL, {
+          transports: ['websocket'],
+          reconnectionAttempts: 5,
+          reconnectionDelay: 1000
+        });
+      }
+
       const stream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
         audio: audioEnabled
@@ -125,7 +154,9 @@ export default function BroadcastPage() {
         stopStream();
       };
     } catch (error) {
-      console.error('Error accessing media devices:', error);
+      console.error('Error starting stream:', error);
+      setIsStreaming(false);
+      setIsLive(false);
     }
   };
 
@@ -194,6 +225,11 @@ export default function BroadcastPage() {
               <p className="text-sm text-gray-400">Viewers</p>
               <p className="text-xl font-semibold text-center text-white">{viewerCount}</p>
             </div>
+            {process.env.NODE_ENV === 'development' && (
+              <div className="bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-lg text-sm">
+                Development Mode
+              </div>
+            )}
           </div>
         </div>
 

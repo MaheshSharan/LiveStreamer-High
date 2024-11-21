@@ -18,8 +18,24 @@ export default function StreamPage({ params }: { params: { id: string } }) {
       ? 'https://livestreamer-backend.onrender.com'  // Replace with your actual Render.com URL
       : 'http://localhost:3001';
     
-    socketRef.current = io(SOCKET_URL);
-    
+    socketRef.current = io(SOCKET_URL, {
+      transports: ['websocket'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
+    });
+
+    socketRef.current.on('connect', () => {
+      console.log('Connected to server with socket ID:', socketRef.current?.id);
+      // Join stream room after connection
+      socketRef.current?.emit('join-stream', params.id);
+    });
+
+    socketRef.current.on('stream-status', ({ isLive: streamIsLive }) => {
+      console.log('Stream status:', streamIsLive ? 'live' : 'offline');
+      setIsLive(streamIsLive);
+      setIsConnecting(false);
+    });
+
     // Initialize WebRTC
     peerConnectionRef.current = new RTCPeerConnection({
       iceServers: [
@@ -52,9 +68,6 @@ export default function StreamPage({ params }: { params: { id: string } }) {
         });
       }
     };
-
-    // Join stream room
-    socketRef.current.emit('join-stream', params.id);
 
     // Handle signaling
     socketRef.current.on('signal', async ({ from, signal }) => {

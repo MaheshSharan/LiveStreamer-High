@@ -20,12 +20,12 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
         credentials: true
     },
-    // Optimize WebSocket for memory usage
+    // Force WebSocket transport only
     transports: ['websocket'],
     pingTimeout: 60000,
     pingInterval: 25000,
-    // Don't store message history
-    maxHttpBufferSize: 1e6 // 1 MB max message size
+    maxHttpBufferSize: 1e6, // 1 MB max message size
+    allowEIO3: true // Enable compatibility with Socket.IO v3 clients
 });
 
 // Store active streams in memory only
@@ -73,7 +73,11 @@ io.on('connection', (socket) => {
             io.to(stream.broadcasterId).emit('viewer-joined', socket.id);
             io.to(stream.broadcasterId).emit('viewer-count', stream.viewers.size);
             socket.emit('viewer-count', stream.viewers.size);
+            socket.emit('stream-status', { isLive: true });
             console.log('Viewer joined:', socket.id, 'Viewer count:', stream.viewers.size);
+        } else {
+            socket.emit('stream-status', { isLive: false });
+            console.log('Stream not found:', streamId);
         }
     });
 
