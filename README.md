@@ -1,8 +1,7 @@
-# 🚀 LiveStreamer High
+# <img src="https://raw.githubusercontent.com/MaheshSharan/LiveStreamer-High/main/frontend/public/og.png" alt="LiveStreamer High" width="20" /> LiveStreamer High
 
 > Share your screen instantly. No downloads. No setup. Just stream.
-
-![LiveStreamer High](https://raw.githubusercontent.com/MaheshSharan/LiveStreamer-High/main/frontend/public/og.png)
+<br>
 
 ## ✨ Features
 
