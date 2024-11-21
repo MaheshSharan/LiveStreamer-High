@@ -105,9 +105,11 @@ export default function BroadcastPage() {
       const baseUrl = process.env.NODE_ENV === 'production'
         ? 'https://live-streamer-high.vercel.app'
         : window.location.origin;
+      console.log('Environment:', process.env.NODE_ENV);
+      console.log('Base URL selected:', baseUrl);
       const url = `${baseUrl}/watch/${id}`;
       setStreamUrl(url);
-      console.log('Stream URL set to:', url);
+      console.log('Final stream URL:', url);
     });
 
     return () => {
@@ -225,11 +227,13 @@ export default function BroadcastPage() {
               <p className="text-sm text-gray-400">Viewers</p>
               <p className="text-xl font-semibold text-center text-white">{viewerCount}</p>
             </div>
-            {process.env.NODE_ENV === 'development' && (
-              <div className="bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-lg text-sm">
-                Development Mode
+            <div className={`px-3 py-1 rounded-lg text-sm ${
+                process.env.NODE_ENV === 'production' 
+                  ? 'bg-green-500/10 text-green-500'
+                  : 'bg-yellow-500/10 text-yellow-500'
+              }`}>
+                {process.env.NODE_ENV === 'production' ? 'Production Mode' : 'Development Mode'}
               </div>
-            )}
           </div>
         </div>
 
