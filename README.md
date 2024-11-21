@@ -1,97 +1,105 @@
-# LiveStreamer High 🎥
+# 🚀 LiveStreamer High
 
-A modern WebRTC-based live streaming platform with real-time screen sharing and minimal latency, built with Next.js 14 and TypeScript.
+> Share your screen instantly. No downloads. No setup. Just stream.
 
-## Features ✨
+![LiveStreamer High](https://raw.githubusercontent.com/MaheshSharan/LiveStreamer-High/main/frontend/public/og.png)
 
-- **Real-time Screen Sharing**: High-quality screen broadcasting
-- **WebRTC Technology**: Ultra-low latency streaming
-- **Modern UI**: Built with Tailwind CSS for a sleek experience
-- **Live Viewer Count**: Real-time audience tracking
-- **Instant Stream URLs**: Easy-to-share unique stream links
-- **Responsive Design**: Works on all devices
+## ✨ Features
 
-## Tech Stack 🛠️
+- 🎯 **Instant Streaming** - Just click and stream. No software needed.
+- 🔗 **Share Instantly** - Get a shareable link in seconds
+- 👥 **Real-time Viewers** - See who's watching in real-time
+- 🖥️ **Screen Sharing** - Share your entire screen or specific window
+- 🚀 **Ultra Low-Latency** - Thanks to WebRTC technology
+- 📱 **Cross-Platform** - Works on any device with a modern browser
+- 🔒 **Secure** - End-to-end encrypted streaming
 
-### Frontend
-- Next.js 14
-- TypeScript
-- Tailwind CSS
-- Socket.IO Client
-- WebRTC
+## 🎮 Quick Start
 
-### Backend
-- Node.js
-- Express
-- Socket.IO
-- CORS
+1. Visit [LiveStreamer High](https://live-streamer-high.vercel.app)
+2. Click "Start Broadcasting"
+3. Choose what to share
+4. Share the URL with your viewers
+5. That's it! You're live! 🎉
 
-## Getting Started 🚀
+## 🛠️ Tech Stack
 
-### Prerequisites
-- Node.js 18+ installed
-- npm or yarn package manager
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Backend**: Node.js, Express
+- **Real-time**: WebRTC, Socket.IO
+- **Deployment**: Vercel (Frontend), Render (Backend)
 
-### Installation
+## 💡 Why LiveStreamer High?
 
-1. Clone the repository
+Traditional streaming platforms require:
+- ❌ Heavy software downloads
+- ❌ Complex configurations
+- ❌ Stream keys and settings
+- ❌ Learning curve
+- ❌ High CPU usage
+
+LiveStreamer High needs:
+- ✅ Just a browser
+- ✅ One click to start
+- ✅ Zero setup
+- ✅ Zero learning curve
+- ✅ Minimal resources
+
+## 🎯 Perfect For
+
+- 💻 Quick Tech Support
+- 🎮 Casual Game Streaming
+- 📚 Online Teaching
+- 👥 Team Presentations
+- 🤝 Pair Programming
+- 🎨 Creative Showcases
+
+## 🔒 Privacy & Security
+
+- All streams are peer-to-peer
+- No data storage
+- No registration required
+- Encrypted transmission
+- Automatic cleanup
+
+## 🚀 Development
+
 ```bash
-git clone https://github.com/yourusername/LiveStreamerHigh.git
-cd LiveStreamerHigh
-```
+# Clone the repo
+git clone https://github.com/MaheshSharan/LiveStreamer-High.git
 
-2. Install Frontend Dependencies
-```bash
-cd frontend
+# Install dependencies
+cd LiveStreamerHigh/frontend
 npm install
-```
-
-3. Install Backend Dependencies
-```bash
 cd ../backend
 npm install
-```
 
-### Running Locally
-
-1. Start the Backend Server
-```bash
-cd backend
-npm start
-# Server runs on http://localhost:3001
-```
-
-2. Start the Frontend Development Server
-```bash
-cd frontend
+# Start development servers
+# Frontend (in frontend directory)
 npm run dev
-# Frontend runs on http://localhost:3000
+
+# Backend (in backend directory)
+npm run dev
 ```
 
-3. Open your browser and navigate to `http://localhost:3000`
+## 🌟 Contributing
 
-## Usage 📝
+Got ideas? Want to make LiveStreamer High even better? We're open to contributions!
 
-1. **Broadcasting**:
-   - Click "Start Broadcasting" on the home page
-   - Select the screen/window to share
-   - Share the generated stream URL with viewers
+1. Fork the repo
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-2. **Watching**:
-   - Open the shared stream URL
-   - Stream loads automatically
-   - View the live stream with minimal delay
+## 📝 License
 
-## Contributing 🤝
+MIT License - feel free to use this for your own projects!
 
-Contributions are welcome! Feel free to open issues and pull requests.
+## 🙌 Credits
 
-## License 📄
+Built with 🧠 by [Mahesh Sharan](https://github.com/MaheshSharan)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+---
 
-## Acknowledgments 🙏
-
-- WebRTC for making real-time communication possible
-- Next.js team for the amazing framework
-- Socket.IO for real-time server-client communication
+### 🎉 Ready to stream? [Start Broadcasting Now!](https://live-streamer-high.vercel.app) 🚀
